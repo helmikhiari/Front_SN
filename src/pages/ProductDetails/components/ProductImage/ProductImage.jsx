@@ -1,7 +1,6 @@
 import "./ProductImage.css";
 import Tilt from "react-parallax-tilt";
 
-
 import React from "react";
 
 export const ProductImage = ({ selectedProduct }) => {
@@ -13,7 +12,7 @@ export const ProductImage = ({ selectedProduct }) => {
       className="product-details-image"
     >
       {" "}
-      <img src={selectedProduct?.img} alt={selectedProduct.name}/>
+      <img src={selectedProduct?.image} alt={selectedProduct.name} />
     </Tilt>
   );
 };

@@ -4,28 +4,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
 import { AiTwotoneHeart } from "react-icons/ai";
-import { BsFillStarFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 export const ProductListingSection = () => {
-  const state  = [];
+  const { filteredProducts } = useSelector((state) => state.products);
+
+  const isStock = (productDetails) => {
+    const p = productDetails.find((pd) => pd.stock > 0);
+    return !!p;
+  };
+
+  const isProductInWishlist = () => {
+    return false;
+  };
+
+  const wishlistHandler = () => {};
 
   return (
     <div className="product-card-container">
-      {!state.length ? (
+      {!filteredProducts.length ? (
         <h2 className="no-products-found">
           Sorry, there are no matching products!
         </h2>
       ) : (
-        state.map((product) => {
+        filteredProducts.map((product) => {
           const {
             _id,
-            id,
             name,
-            original_price,
-            discounted_price,
-            category_name,
+            price,
+            onSale,
+            gender,
             is_stock,
-            img,
+            image,
+            productDetails,
           } = product;
 
           return (
@@ -38,7 +49,7 @@ export const ProductListingSection = () => {
               scale={1.02}
             >
               <div className="product-card" key={_id}>
-                <Link to={`/product-details/${id}`}>
+                <Link to={`/product-details/${_id}`}>
                   <div className="product-card-image">
                     <Tilt
                       transitionSpeed={2000}
@@ -46,26 +57,24 @@ export const ProductListingSection = () => {
                       tiltMaxAngleY={15}
                       scale={1.18}
                     >
-                      <img src={img} />
+                      <img src={image} />
                     </Tilt>
                   </div>
                 </Link>
 
                 <div className="product-card-details">
                   <h3>{name}</h3>
-                  <p className="ratings">
-                    {rating}
-                    <BsFillStarFill color="orange" /> ({reviews} reviews){" "}
-                  </p>
                   <div className="price-container">
-                    <p className="original-price">${original_price}</p>
-                    <p className="discount-price">${discounted_price}</p>
+                    {onSale < 1 && <p className="original-price">${price}</p>}
+                    <p className="discount-price">${price * onSale}</p>
                   </div>
 
-                  <p>Gender: {category_name}</p>
+                  <p>Gender: {gender}</p>
                   <div className="info">
-                    {!is_stock && <p className="out-of-stock">Out of stock</p>}
-                    {trending && <p className="trending">Trending</p>}
+                    {!isStock(productDetails) && (
+                      <p className="out-of-stock">Out of stock</p>
+                    )}
+                    {/* {trending && <p className="trending">Trending</p>} */}
                   </div>
                 </div>
 

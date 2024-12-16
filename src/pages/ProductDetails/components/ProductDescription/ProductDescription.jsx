@@ -1,22 +1,31 @@
 import "./ProductDescription.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsFillStarFill } from "react-icons/bs";
 
 export const ProductDescription = ({ selectedProduct }) => {
-  const cartLoading=false;
+  const [sizes, setSizes] = useState([]);
+  useEffect(() => {
+    let aux = selectedProduct.productDetails.map((pd) =>
+      pd.stock > 0 ? pd.size : null
+    );
+    setSizes(aux.sort());
+  }, [selectedProduct]);
+
+  const cartLoading = false;
 
   return (
     <div className="product-details-description">
       <h1 className="product-name">{selectedProduct?.name}</h1>
 
-
       <div className="product-price-container">
-        <span className="product-original-price">
-          ${selectedProduct?.original_price}{" "}
-        </span>
+        {selectedProduct.onSale < 1 && (
+          <span className="product-original-price">
+            ${selectedProduct?.price}{" "}
+          </span>
+        )}
         <span className="product-discount-price">
           {" "}
-          ${selectedProduct?.discounted_price}
+          ${selectedProduct?.price * selectedProduct.onSale}
         </span>
       </div>
 
@@ -25,18 +34,19 @@ export const ProductDescription = ({ selectedProduct }) => {
       </p>
 
       <span className="gender-container">
-        <span>Gender</span>: {selectedProduct?.category_name}
+        <span>Gender</span>: {selectedProduct?.gender}
       </span>
       <p className="size-container">
         <span>Size</span>: {selectedProduct?.size}
+        <select style={{ width: 150, fontSize: 17 }}>
+          <option disabled>Choose Size</option>
+          {sizes.map((size) => (
+            <option value={size}>{size}</option>
+          ))}
+        </select>
       </p>
 
       <div className="tags">
-        {!selectedProduct?.is_stock && (
-          <span className="out-of-stock">
-            {selectedProduct?.is_stock ? "In Stock" : "Out of stock"}
-          </span>
-        )}
         {/* {selectedProduct?.trending && (
           <span className="trending">
             {selectedProduct?.trending ? "Trending" : ""}
@@ -44,13 +54,15 @@ export const ProductDescription = ({ selectedProduct }) => {
         )} */}
       </div>
       <div className="product-card-buttons-container">
-        <button disabled={cartLoading}
+        <button
+          disabled={cartLoading}
           // onClick={() => addToCartHandler(selectedProduct)}
           className="add-to-cart-btn"
         >
           {/* {!isProductInCart(selectedProduct) ? "Add to cart" : "Go to cart"} */}
         </button>
-        <button disabled={cartLoading}
+        <button
+          disabled={cartLoading}
           // onClick={() => wishlistHandler(selectedProduct)}
           className="add-to-wishlist-btn"
         >

@@ -1,12 +1,40 @@
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { RxCross2 } from "react-icons/rx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import React from "react";
 import "./Filter.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilteredProducts } from "../../../../slices/productSlice";
 
 export const Filter = () => {
   const [isFilterMenuOn, setIsFilterMenuOn] = useState(false);
+  const { products, filteredProducts } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
+
+  const reset = () => {
+    setSort(null);
+    dispatch(setFilteredProducts(products));
+  };
+
+  const [sort, setSort] = useState(null);
+  const handleSort = (e) => {
+    e.target.id == "low-to-high" ? setSort(1) : setSort(-1);
+  };
+
+  useEffect(() => {
+    if (sort) {
+      console.log(filteredProducts);
+      const aux = [...filteredProducts].sort((p1, p2) =>
+        sort == 1
+          ? p1.price * p1.onSale - p2.price * p1.onSale
+          : p2.price * p2.onSale - p1.price * p1.onSale
+      );
+      // console.log(aux);
+      dispatch(setFilteredProducts(aux));
+    }
+  }, [sort]);
+
   const state = { filters: {} };
   return (
     <div>
@@ -34,17 +62,7 @@ export const Filter = () => {
 
           <button
             className={isFilterMenuOn ? "reset-btn" : "reset-btn-hide"}
-            // onClick={() =>
-            //   dispatch({
-            //     type: "RESET",
-            //     payload: {
-            //       rating: "",
-            //       categories: [],
-            //       price: [],
-            //       sort: "",
-            //     },
-            //   })
-            // }
+            onClick={reset}
           >
             Reset
           </button>
@@ -81,7 +99,7 @@ export const Filter = () => {
                 $201 - $999
                 <input
                   // checked={state?.filters?.price.find((price) =>
-                    // price.min === 201 ? true : false
+                  // price.min === 201 ? true : false
                   // )}
                   // onChange={() =>
                   //   dispatch({
@@ -181,10 +199,8 @@ export const Filter = () => {
               <label htmlFor="high-to-low">
                 Price-high to low
                 <input
-                  // checked={state.filters.sort === "highToLow"}
-                  // onChange={() =>
-                  //   dispatch({ type: "ADD_SORT", payload: "highToLow" })
-                  // }
+                  checked={sort==-1}
+                  onChange={handleSort}
                   name="sort"
                   id="high-to-low"
                   type="radio"
@@ -194,10 +210,8 @@ export const Filter = () => {
               <label htmlFor="low-to-high">
                 Price-low to high
                 <input
-                  // checked={state.filters.sort === "lowToHigh"}
-                  // onChange={() =>
-                  //   dispatch({ type: "ADD_SORT", payload: "lowToHigh" })
-                  // }
+                  checked={sort==1}
+                  onChange={handleSort}
                   name="sort"
                   id="low-to-high"
                   type="radio"

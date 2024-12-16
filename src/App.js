@@ -4,9 +4,23 @@ import { Toaster } from "react-hot-toast";
 import { NavRoutes } from "./routes/NavRoutes";
 import { ScrollToTop } from "./components/ScrollToTop/ScrollToTop";
 import { Loader } from "./components/Loader/Loader";
-
+import { useEffect } from "react";
+import { getAllProducts } from "./Apis/productApis";
+import { useDispatch } from "react-redux";
+import { setProducts } from "./slices/productSlice";
 function App() {
+  const dispatch = useDispatch()
   const loading = false;
+
+  const fetchProducts = async () => {
+    const data = await getAllProducts()
+    dispatch(setProducts(data));
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  },
+    [])
 
   return (
     <div className="App">
