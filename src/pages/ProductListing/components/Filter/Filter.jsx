@@ -10,32 +10,79 @@ import { setFilteredProducts } from "../../../../slices/productSlice";
 export const Filter = () => {
   const [isFilterMenuOn, setIsFilterMenuOn] = useState(false);
   const { products, filteredProducts } = useSelector((state) => state.products);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [sort, setSort] = useState(null);
+  const [price, setPrice] = useState([]);
   const dispatch = useDispatch();
 
+  const allCategories = ["men", "women", "kids"];
   const reset = () => {
     setSort(null);
     dispatch(setFilteredProducts(products));
   };
 
-  const [sort, setSort] = useState(null);
+  const handlePriceChange = (index) => {
+    const exist = price.indexOf(index);
+    if (exist >= 0) setPrice(price.filter((i) => i != index));
+    else setPrice([...price, index]);
+  };
+
+  const handleFilterChange = () => {
+    let aux = products;
+    if (selectedCategories.length != 0) {
+      aux = aux.filter((produit) =>
+        selectedCategories.includes(produit.gender)
+      );
+    }
+    if (price.length > 0) {
+      let aux2 = [];
+      if (price.includes(0)) aux2 = aux.filter((p) => p.price * p.onSale < 200);
+      if (price.includes(1))
+        aux2 = [
+          ...aux2,
+          ...aux.filter(
+            (p) => p.price * p.onSale > 200 && p.price * p.onSale < 1000
+          ),
+        ];
+      if (price.includes(2))
+        aux2 = [
+          ...aux2,
+          ...aux.filter(
+            (p) => p.price * p.onSale >= 1000 && p.price * p.onSale < 2000
+          ),
+        ];
+      if (price.includes(3))
+        aux2 = [...aux2, ...aux.filter((p) => p.price * p.onSale >= 2000)];
+      aux = aux2;
+    }
+
+    if (sort) {
+      aux = [...aux].sort((p1, p2) =>
+        sort == 1
+          ? p1.price * p1.onSale - p2.price * p2.onSale
+          : p2.price * p2.onSale - p1.price * p1.onSale
+      );
+    }
+    dispatch(setFilteredProducts(aux));
+  };
+
+  useEffect(() => {
+    if (selectedCategories && price) handleFilterChange();
+  }, [selectedCategories, sort, price]);
+
+  const handleCheck = (e, categoryName) => {
+    if (e.target.checked) {
+      setSelectedCategories([...selectedCategories, categoryName]);
+    } else {
+      setSelectedCategories(
+        selectedCategories.filter((cn) => cn != categoryName)
+      );
+    }
+  };
   const handleSort = (e) => {
     e.target.id == "low-to-high" ? setSort(1) : setSort(-1);
   };
 
-  useEffect(() => {
-    if (sort) {
-      console.log(filteredProducts);
-      const aux = [...filteredProducts].sort((p1, p2) =>
-        sort == 1
-          ? p1.price * p1.onSale - p2.price * p1.onSale
-          : p2.price * p2.onSale - p1.price * p1.onSale
-      );
-      // console.log(aux);
-      dispatch(setFilteredProducts(aux));
-    }
-  }, [sort]);
-
-  const state = { filters: {} };
   return (
     <div>
       <div
@@ -81,15 +128,7 @@ export const Filter = () => {
               <label htmlFor="below-200">
                 Below $200
                 <input
-                  // checked={state?.filters?.price.find((price) =>
-                  //   price.min === 0 ? true : false
-                  // )}
-                  // onChange={() =>
-                  //   dispatch({
-                  //     type: "ADD_PRICE",
-                  //     payload: { min: 0, max: 200 },
-                  //   })
-                  // }
+                  onClick={() => handlePriceChange(0)}
                   id="below-200"
                   type="checkbox"
                 />
@@ -98,15 +137,7 @@ export const Filter = () => {
               <label htmlFor="201-999">
                 $201 - $999
                 <input
-                  // checked={state?.filters?.price.find((price) =>
-                  // price.min === 201 ? true : false
-                  // )}
-                  // onChange={() =>
-                  //   dispatch({
-                  //     type: "ADD_PRICE",
-                  //     payload: { min: 201, max: 999 },
-                  //   })
-                  // }
+                  onClick={() => handlePriceChange(1)}
                   id="201-999"
                   type="checkbox"
                 />
@@ -115,9 +146,7 @@ export const Filter = () => {
               <label htmlFor="1000-1999">
                 $1000 - $1999
                 <input
-                  // checked={state?.filters?.price.find((price) =>
-                  //   price.min === 1000 ? true : false
-                  // )}
+                  onClick={() => handlePriceChange(2)}
                   id="1000-1999"
                   type="checkbox"
                 />
@@ -126,9 +155,7 @@ export const Filter = () => {
               <label htmlFor="above 2000">
                 Over $2000
                 <input
-                  // checked={state?.filters?.price.find((price) =>
-                  //   price.min === 2000 ? true : false
-                  // )}
+                  onClick={() => handlePriceChange(3)}
                   id="above 2000"
                   type="checkbox"
                 />
@@ -171,18 +198,12 @@ export const Filter = () => {
           <div className="category-container">
             <h3>Categories</h3>
             <div className="category-input-container">
-              {state.allCategories?.map(({ categoryName }) => (
+              {allCategories.map((categoryName) => (
                 <div className="category-input-container" key={categoryName}>
                   <label htmlFor={`category-${categoryName}`}>
                     {`${categoryName}'s wear`}
                     <input
-                      // checked={state.filters.categories.includes(categoryName)}
-                      // onChange={() =>
-                      //   dispatch({
-                      //     type: "ADD_CATEGORIES",
-                      //     payload: categoryName,
-                      //   })
-                      // }
+                      onChange={(e) => handleCheck(e, categoryName)}
                       id={`category-${categoryName}`}
                       type="checkbox"
                     />
@@ -199,7 +220,7 @@ export const Filter = () => {
               <label htmlFor="high-to-low">
                 Price-high to low
                 <input
-                  checked={sort==-1}
+                  checked={sort == -1}
                   onChange={handleSort}
                   name="sort"
                   id="high-to-low"
@@ -210,7 +231,7 @@ export const Filter = () => {
               <label htmlFor="low-to-high">
                 Price-low to high
                 <input
-                  checked={sort==1}
+                  checked={sort == 1}
                   onChange={handleSort}
                   name="sort"
                   id="low-to-high"

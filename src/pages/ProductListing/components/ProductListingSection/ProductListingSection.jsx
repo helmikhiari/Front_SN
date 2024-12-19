@@ -9,8 +9,9 @@ import { useSelector } from "react-redux";
 export const ProductListingSection = () => {
   const { filteredProducts } = useSelector((state) => state.products);
 
+  console.log("fff" + filteredProducts);
   const isStock = (productDetails) => {
-    const p = productDetails.find((pd) => pd.stock > 0);
+    const p = productDetails?.find((pd) => pd.stock > 0);
     return !!p;
   };
 
@@ -38,7 +39,7 @@ export const ProductListingSection = () => {
             image,
             productDetails,
           } = product;
-
+          console.log(productDetails);
           return (
             <Tilt
               key={product._id}
