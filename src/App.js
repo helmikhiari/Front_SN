@@ -8,6 +8,13 @@ import { useEffect } from "react";
 import { getAllProducts } from "./Apis/productApis";
 import { useDispatch } from "react-redux";
 import { setProducts } from "./slices/productSlice";
+import { getUser } from "./Apis/userApis";
+import { setData, setIsAuth } from "./slices/userSlice";
+import { setOrders } from "./slices/ordersList";
+import { setWishList } from "./slices/wishListSlice";
+import { Wishlist } from './pages/Wishlist/Wishlist';
+import { setCartList } from "./slices/cartListSlice";
+import { handleLoginState } from "./utils/userState";
 function App() {
   const dispatch = useDispatch()
   const loading = false;
@@ -17,8 +24,11 @@ function App() {
     dispatch(setProducts(data));
   }
 
+  
+
   useEffect(() => {
     fetchProducts()
+    handleLoginState(dispatch);
   },
     [])
 

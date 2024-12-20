@@ -6,11 +6,15 @@ import React from "react";
 import "./Filter.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilteredProducts } from "../../../../slices/productSlice";
+import { setParamCategory, setParamSearch } from "../../../../slices/appSlice";
 
 export const Filter = () => {
+  const { param_category,param_search } = useSelector((state) => state.app);
   const [isFilterMenuOn, setIsFilterMenuOn] = useState(false);
-  const { products, filteredProducts } = useSelector((state) => state.products);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const { products } = useSelector((state) => state.products);
+  const [selectedCategories, setSelectedCategories] = useState(
+    param_category ? [param_category] : []
+  );
   const [sort, setSort] = useState(null);
   const [price, setPrice] = useState([]);
   const dispatch = useDispatch();
@@ -20,6 +24,13 @@ export const Filter = () => {
     setSort(null);
     dispatch(setFilteredProducts(products));
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(setParamCategory(null));
+      dispatch(setParamSearch(""))
+    };
+  }, []);
 
   const handlePriceChange = (index) => {
     const exist = price.indexOf(index);
@@ -63,12 +74,15 @@ export const Filter = () => {
           : p2.price * p2.onSale - p1.price * p1.onSale
       );
     }
+
+      aux=aux.filter((p)=>p.name.toLowerCase().includes(param_search)||p.description.toLowerCase().includes(param_search));
+
     dispatch(setFilteredProducts(aux));
   };
 
   useEffect(() => {
     if (selectedCategories && price) handleFilterChange();
-  }, [selectedCategories, sort, price]);
+  }, [selectedCategories, sort, price,param_search]);
 
   const handleCheck = (e, categoryName) => {
     if (e.target.checked) {
@@ -206,6 +220,7 @@ export const Filter = () => {
                       onChange={(e) => handleCheck(e, categoryName)}
                       id={`category-${categoryName}`}
                       type="checkbox"
+                      defaultChecked={categoryName == param_category}
                     />
                   </label>
                 </div>

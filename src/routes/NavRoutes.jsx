@@ -16,6 +16,7 @@ import { Profile } from "../pages/UserProfile/Profile/Profile";
 import { Orders } from "../pages/UserProfile/Orders/Orders";
 import { PageNotFound } from "../pages/PageNotFound/PageNotFound";
 import { Logout } from "../pages/auth/Logout/Logout";
+import Redirect from "../components/redirect";
 
 export const NavRoutes = () => {
   return (
@@ -38,10 +39,23 @@ export const NavRoutes = () => {
         }
       />
       <Route path="*" element={<PageNotFound />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/logout" element={<Logout />} />
+      <Route
+        path="/login"
+        element={
+          <Redirect>
+            <Login />
+          </Redirect>
+        }
+      />
       <Route path="/product-listing" element={<ProductListing />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route
+        path="/signup"
+        element={
+          <Redirect>
+            <Signup />
+          </Redirect>
+        }
+      />
       <Route path="/product-details/:productId" element={<ProductDetails />} />
       <Route
         path="/checkout"

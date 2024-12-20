@@ -1,9 +1,10 @@
 import React from "react";
 import { Logout } from "../../auth/Logout/Logout";
 import "./Profile.css";
+import { useSelector } from "react-redux";
 
 export const Profile = () => {
-  const  auth={}
+  const { firstName, lastName, email } = useSelector((state) => state.user);
 
   return (
     <div className="profile-container">
@@ -12,13 +13,13 @@ export const Profile = () => {
           <span>Full Name: </span>
           <span>
             {" "}
-            {auth.firstName} {auth.lastName}{" "}
+            {firstName} {lastName}{" "}
           </span>
         </div>
 
         <div className="email">
           <span>Email: </span>
-          <span> {auth.email} </span>
+          <span> {email} </span>
         </div>
       </div>
       <Logout />

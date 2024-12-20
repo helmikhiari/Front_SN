@@ -9,10 +9,13 @@ import { GrSearch } from "react-icons/gr";
 import { CgShoppingCart } from "react-icons/cg";
 
 import { SiTaichilang } from "react-icons/si";
+import { useDispatch, useSelector } from "react-redux";
+import { setParamSearch } from "../../slices/appSlice";
 
 export const Header = () => {
-  const auth = false;
+  const {isAuthenticated:auth}=useSelector(state=>state.user)
   const navigate = useNavigate();
+  const disaptch = useDispatch();
   const [showHamburger, setShowHamburger] = useState(true);
   const getActiveStyle = ({ isActive }) => {
     return { color: isActive ? "white" : "" };
@@ -26,6 +29,8 @@ export const Header = () => {
 
   const isProductInWishlist = () =>
     Number(totalProductsInWishlist) ? true : false;
+  const {param_search}=useSelector(state=>state.app)
+  const handleSeachChange = (e) => disaptch(setParamSearch(e.target.value));
 
   return (
     <nav>
@@ -38,9 +43,8 @@ export const Header = () => {
 
       <div className="nav-input-search">
         <input
-          // onChange={(e) =>
-          //   dispatch({ type: "SEARCH", payload: e.target.value })
-          // }
+          value={param_search}
+          onChange={handleSeachChange}
           onKeyDown={(e) => {
             e.key === "Enter" && navigate("/product-listing");
           }}

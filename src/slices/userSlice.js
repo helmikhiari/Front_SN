@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { useDispatch } from "react-redux";
 
 const initialState =
 {
     firstName: "",
     lastName: "",
     email: "",
-    isAuthenticated: false
+    isAuthenticated: null
 }
 
 const userSlice = createSlice({
@@ -22,7 +23,7 @@ const userSlice = createSlice({
             state.lastName = action.payload.lastName;
             state.email = action.payload.email;
         },
-        Logout: (state) => {
+        logout: (state) => {
             state.firstName = "",
                 state.lastName = '',
                 state.email = "",
@@ -32,6 +33,6 @@ const userSlice = createSlice({
     }
 })
 
-export const { setIsAuth, setData, Logout } = userSlice.actions;
+export const { setIsAuth, setData, logout } = userSlice.actions;
 export default userSlice.reducer;
 
