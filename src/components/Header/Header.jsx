@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setParamSearch } from "../../slices/appSlice";
 
 export const Header = () => {
-  const {isAuthenticated:auth}=useSelector(state=>state.user)
+  const { isAuthenticated: auth } = useSelector((state) => state.user);
+  const { wishList } = useSelector((state) => state.wishList);
   const navigate = useNavigate();
   const disaptch = useDispatch();
   const [showHamburger, setShowHamburger] = useState(true);
@@ -25,11 +26,8 @@ export const Header = () => {
 
   const isProductInCart = () => (Number(totalProductsInCart) ? true : false);
 
-  const totalProductsInWishlist = 0;
-
-  const isProductInWishlist = () =>
-    Number(totalProductsInWishlist) ? true : false;
-  const {param_search}=useSelector(state=>state.app)
+  const isProductInWishlist = () => wishList.length > 0;
+  const { param_search } = useSelector((state) => state.app);
   const handleSeachChange = (e) => disaptch(setParamSearch(e.target.value));
 
   return (
@@ -85,7 +83,7 @@ export const Header = () => {
           <CgHeart size={25} className="wishlist" />{" "}
           {isProductInWishlist() && (
             <span className="cart-count cart-count-mobile">
-              {totalProductsInWishlist}
+              {wishList.length}
             </span>
           )}
         </NavLink>

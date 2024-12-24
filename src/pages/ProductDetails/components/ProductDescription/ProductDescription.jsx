@@ -1,9 +1,24 @@
 import "./ProductDescription.css";
 import React, { useEffect, useState } from "react";
 import { BsFillStarFill } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleProduct } from "../../../../Apis/userApis";
+import { toggleWhishlist } from "../../../../slices/wishListSlice";
 
 export const ProductDescription = ({ selectedProduct }) => {
   const [sizes, setSizes] = useState([]);
+  const { wishList } = useSelector((state) => state.wishList);
+  const dispatch = useDispatch();
+
+  const isProductInWishlist = () => {
+    return wishList.includes(selectedProduct._id);
+  };
+
+  const wishlistHandler = async () => {
+    const res = await toggleProduct(selectedProduct._id);
+    if (res) dispatch(toggleWhishlist(selectedProduct._id));
+  };
+
   useEffect(() => {
     let aux = selectedProduct.productDetails.map((pd) =>
       pd.stock > 0 ? pd.size : null
@@ -63,12 +78,10 @@ export const ProductDescription = ({ selectedProduct }) => {
         </button>
         <button
           disabled={cartLoading}
-          // onClick={() => wishlistHandler(selectedProduct)}
+          onClick={wishlistHandler}
           className="add-to-wishlist-btn"
         >
-          {/* {!isProductInWishlist(selectedProduct)
-            ? "Add to wishlist"
-            : "Remove from wishlist"} */}
+          {!isProductInWishlist() ? "Add to wishlist" : "Remove from wishlist"}
         </button>
       </div>
     </div>

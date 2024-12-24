@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { AiOutlineHeart } from "react-icons/ai";
 import { AiFillHeart } from "react-icons/ai";
 import "./CartListing.css";
+import { useSelector } from "react-redux";
 
 export const CartListing = () => {
-  const cartProducts=[]
+  const [cartProducts, setCartProducts] = useState([]);
+  const { cart } = useSelector((state) => state.cartList);
+  console.log("Heeeere");
+  const { products } = useSelector((state) => state.products);
+  useEffect(() => {
+    console.log("CART List " + cart);
+    if (cart) {
+      let aux = [];
+      for (let c of cart) {
+        const product = products.find((prod) =>
+          prod.productDetails.find((pd) => pd._id == c.productDetailsID)
+        );
+        console.log("product is " + product);
+      }
+      setCartProducts(aux);
+    }
+  }, [cart]);
   return (
     <div className="cart-products-container">
-      {cartProducts.map((product) => (
+      {cartProducts.map((cart) => (
         <div className="cart-product-card" key={product.id}>
           <div>
             <img className="cart-img" alt={product.name} src={product.img} />

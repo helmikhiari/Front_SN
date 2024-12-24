@@ -1,25 +1,31 @@
 import "./ProductListingSection.css";
 import Tilt from "react-parallax-tilt";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineHeart } from "react-icons/ai";
 import { AiTwotoneHeart } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleProduct } from "../../../../Apis/userApis";
+import { toggleWhishlist } from "../../../../slices/wishListSlice";
 
 export const ProductListingSection = () => {
   const { filteredProducts } = useSelector((state) => state.products);
-
+  const { wishList } = useSelector((state) => state.wishList);
+  const dispatch = useDispatch();
   console.log("fff" + filteredProducts);
   const isStock = (productDetails) => {
     const p = productDetails?.find((pd) => pd.stock > 0);
     return !!p;
   };
 
-  const isProductInWishlist = () => {
-    return false;
+  const isProductInWishlist = (id) => {
+    return wishList.includes(id);
   };
 
-  const wishlistHandler = () => {};
+  const wishlistHandler = async (id) => {
+    const res = await toggleProduct(id);
+    if (res) dispatch(toggleWhishlist(id));
+  };
 
   return (
     <div className="product-card-container">
@@ -88,14 +94,20 @@ export const ProductListingSection = () => {
                     {!isProductInCart(product) ? "Add To Cart" : "Go to Cart"}
                   </button> */}
                   <button
-                    onClick={() => wishlistHandler(product)}
+                    onClick={() => wishlistHandler(_id)}
                     className="wishlist-btn"
                   >
-                    {!isProductInWishlist(product) ? (
-                      <AiOutlineHeart size={30} />
-                    ) : (
-                      <AiTwotoneHeart size={30} />
-                    )}
+                    <div
+                      className={
+                        isProductInWishlist(_id) ? "heart-container" : null
+                      }
+                    >
+                      {!isProductInWishlist(_id) ? (
+                        <AiOutlineHeart color="red" size={30} />
+                      ) : (
+                        <AiTwotoneHeart color="red" size={30} />
+                      )}
+                    </div>
                   </button>
                 </div>
               </div>

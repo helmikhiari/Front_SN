@@ -16,10 +16,18 @@ const wishlistSlice = createSlice({
         clearWishList: (state) => {
             state.wishList = [];
         }
+        ,
+        toggleWhishlist: (state, action) => {
+            const index = state.wishList.indexOf(action.payload)
+            if (index == -1)
+                state.wishList.push(action.payload)
+            else
+                state.wishList.splice(index, 1);
+        }
 
     }
 })
 
-export const { setWishList, clearWishList } = wishlistSlice.actions;
+export const { setWishList, clearWishList, toggleWhishlist } = wishlistSlice.actions;
 
 export default wishlistSlice.reducer;

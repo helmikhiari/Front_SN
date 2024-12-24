@@ -18,3 +18,24 @@ export async function getUser()
         return false;
     }
 }
+
+export async function toggleProduct(productID)
+{
+    try
+    {
+        const token=localStorage.getItem("token")
+        if (!token)
+        {
+            return false;
+        }
+        const rep=await user.patch("/toggleProduct",{productID}
+            ,{headers:{"Authorization":`Bearer ${token}`}}
+        );
+        console.log(rep.data)
+        return true
+    }
+    catch(error)
+    {   console.log(error)
+        return false;
+    }
+}

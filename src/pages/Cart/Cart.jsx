@@ -3,17 +3,16 @@ import "./Cart.css";
 import { CartListing } from "./components/CartListing/CartListing";
 import { useNavigate } from "react-router-dom";
 import { CartAmountSummary } from "./components/CartAmountSummary/CartAmountSummary";
-
-
+import { useSelector } from "react-redux";
 
 export const Cart = () => {
-  const cartProducts =[]
-  const navigate = useNavigate();
-  const  loading  = true;
+  const { cart } = useSelector((state) => state.cartList);
 
+  const navigate = useNavigate();
+  const loading = false;
   return (
     !loading &&
-    (cartProducts.length ? (
+    (false ? (
       <div>
         <h1 className="page-heading">Cart</h1>
         <div className="cart-container">
