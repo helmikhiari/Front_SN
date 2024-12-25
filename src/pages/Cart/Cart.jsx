@@ -12,7 +12,7 @@ export const Cart = () => {
   const loading = false;
   return (
     !loading &&
-    (false ? (
+    (cart.length>0 ? (
       <div>
         <h1 className="page-heading">Cart</h1>
         <div className="cart-container">

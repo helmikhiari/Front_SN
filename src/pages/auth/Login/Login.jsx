@@ -8,6 +8,7 @@ import { login } from "../../../Apis/authApis";
 import { useDispatch } from "react-redux";
 import { setIsAuth } from "../../../slices/userSlice";
 import { handleLoginState } from "../../../utils/userState";
+import toast from "react-hot-toast";
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export const Login = () => {
       localStorage.setItem("token", rep.token);
       await handleLoginState(dispatch);
       navigate("/product-listing");
+      toast.success("Logged In");
     } else {
       setErrors(rep);
     }

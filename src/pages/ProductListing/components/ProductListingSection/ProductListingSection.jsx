@@ -7,6 +7,7 @@ import { AiTwotoneHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleProduct } from "../../../../Apis/userApis";
 import { toggleWhishlist } from "../../../../slices/wishListSlice";
+import toast from "react-hot-toast";
 
 export const ProductListingSection = () => {
   const { filteredProducts } = useSelector((state) => state.products);
@@ -25,6 +26,7 @@ export const ProductListingSection = () => {
   const wishlistHandler = async (id) => {
     const res = await toggleProduct(id);
     if (res) dispatch(toggleWhishlist(id));
+    else toast.error("Login First");
   };
 
   return (
