@@ -92,7 +92,9 @@ export const Login = () => {
               <label htmlFor="remember-me">Keep me signed in</label>
             </div>
 
-            <p>Forgot your password?</p>
+            <Link to="/forgetPassword" className="forgp">
+              Forgot your password?
+            </Link>
           </div>
           {errors.error && <span className="error">{errors.error}</span>}
           <div className="login-btn-container">

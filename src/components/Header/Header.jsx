@@ -15,6 +15,7 @@ import { setParamSearch } from "../../slices/appSlice";
 export const Header = () => {
   const { isAuthenticated: auth } = useSelector((state) => state.user);
   const { wishList } = useSelector((state) => state.wishList);
+  const { cart } = useSelector((state) => state.cartList);
   const navigate = useNavigate();
   const disaptch = useDispatch();
   const [showHamburger, setShowHamburger] = useState(true);
@@ -24,7 +25,7 @@ export const Header = () => {
 
   const totalProductsInCart = 0;
 
-  const isProductInCart = () => (Number(totalProductsInCart) ? true : false);
+  const isProductInCart = () => cart.length > 0;
 
   const isProductInWishlist = () => wishList.length > 0;
   const { param_search } = useSelector((state) => state.app);
@@ -97,7 +98,7 @@ export const Header = () => {
           {isProductInCart() && (
             <span className="cart-count cart-count-mobile">
               {" "}
-              {totalProductsInCart}{" "}
+              {cart.length}{" "}
             </span>
           )}
         </NavLink>

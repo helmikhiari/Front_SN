@@ -17,6 +17,8 @@ import { Orders } from "../pages/UserProfile/Orders/Orders";
 import { PageNotFound } from "../pages/PageNotFound/PageNotFound";
 import { Logout } from "../pages/auth/Logout/Logout";
 import Redirect from "../components/redirect";
+import { ForgetPassword } from "../pages/auth/forget Password/forgetPassword";
+import { ResetPassword } from "../pages/auth/resetPassword/resetPassword";
 
 export const NavRoutes = () => {
   return (
@@ -56,6 +58,8 @@ export const NavRoutes = () => {
           </Redirect>
         }
       />
+      <Route path="/forgetPassword" element={<ForgetPassword />} />
+      <Route path="resetPassword/:token" element={<ResetPassword />} />
       <Route path="/product-details/:productId" element={<ProductDetails />} />
       <Route
         path="/checkout"

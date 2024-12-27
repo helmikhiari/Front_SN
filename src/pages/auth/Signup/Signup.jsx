@@ -5,16 +5,15 @@ import { BsEye } from "react-icons/bs";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import React from "react";
-
-
+import { registerAPI } from "../../../Apis/userApis";
 
 export const Signup = () => {
-  const  loading  = false
+  const loading = false;
 
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const [signUpLoading, setSignUpLoading] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const [signupCredential, setSignupCredential] = useState({
@@ -25,19 +24,35 @@ export const Signup = () => {
     lastName: "",
   });
 
+  const passwords_Match = () =>
+    signupCredential.password == signupCredential.confirmPassword;
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!passwords_Match()) {
+      setErrors({ confirmPassword: "Password does not match" });
+      return;
+    }
+    setErrors({});
+    delete signupCredential.confirmPassword;
+    const res = await registerAPI(signupCredential);
+    if (!res.email && !res.error) {
+      toast.success("User Registered!");
+      setTimeout(() => navigate("/login"), 1500);
+    } else {
+      if (res.email) {
+        setErrors(res);
+      } else {
+        toast.error(res.error);
+      }
+    }
+  };
 
   return (
     !loading && (
       <div className="signup-container">
         <h2>Sign Up</h2>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            // signupHandler();
-          }}
-          className="signup-body"
-        >
+        <form onSubmit={handleSubmit} className="signup-body">
           <div className="email-container">
             <label htmlFor="email">Email Address</label>
             <input
@@ -48,12 +63,13 @@ export const Signup = () => {
                   email: e.target.value,
                 })
               }
+              className={errors.email ? "ring-effect" : ""}
               id="email"
               placeholder="Enter Email"
               type="email"
             />
           </div>
-
+          {errors.email && <span className="error">{errors.email}</span>}
           <div className="password-container">
             <label htmlFor="password">Password</label>
             <div className="input-container">
@@ -84,9 +100,9 @@ export const Signup = () => {
             </div>
           </div>
 
-          <div className="confirm-password-container">
+          <div className={"confirm-password-container"}>
             <label for="confirm-password">Confirm Password</label>
-            <div className="input-container">
+            <div className={"input-container ring-effect "}>
               <input
                 required
                 id="confirm-password"
@@ -113,6 +129,9 @@ export const Signup = () => {
               )}
             </div>
           </div>
+          {errors.confirmPassword && (
+            <span className="error">{errors.confirmPassword}</span>
+          )}
 
           <div className="name-container">
             <label htmlFor="first-name">First Name</label>

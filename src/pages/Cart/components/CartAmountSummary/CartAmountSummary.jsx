@@ -25,9 +25,6 @@ export const CartAmountSummary = () => {
     return [sum,discountSum,sum-discountSum];
   }
 
-  const totalOriginalPrice = 0;
-  const totalDiscountPrice = 0;
-
   return (
     <div className="cart-price-container">
       <h1>Summary</h1>

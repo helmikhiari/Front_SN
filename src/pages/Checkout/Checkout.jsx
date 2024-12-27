@@ -3,9 +3,9 @@ import "./Checkout.css";
 import { OrderSummary } from "./components/OrderSummary/OrderSummary";
 
 export const Checkout = () => {
-  const  cartProducts  = []
+  const cartProducts = [0];
   const navigate = useNavigate();
-  const loading =false
+  const loading = false;
   return (
     !loading &&
     (cartProducts.length ? (

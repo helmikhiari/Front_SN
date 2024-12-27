@@ -85,3 +85,29 @@ export async function deleteFromCartAPI(cartID) {
     }
 }
 
+export async function purchaseAPI() {
+    try {
+        const token = localStorage.getItem("token")
+        if (!token) {
+            return false;
+        }
+        const rep = await user.post("/purchase", null, { headers: { 'Authorization': `Bearer ${token}` } });
+        return rep.data;
+    } catch (error) {
+        console.log("purchase error " + error)
+        return false;
+    }
+}
+
+export async function registerAPI(newUser) {
+    try {
+        const rep = await user.post("/register", newUser)
+        return rep.data;
+    } catch (error) {
+        console.log(error.response.status)
+        if (error.response.status === 409)
+            return { email: "User with this email already exists" }
+        else
+            return { error: "Error While Signing Up" };
+    }
+}

@@ -168,3 +168,7 @@
     width: 400px;
   }
 }
+.ring-effect {
+  border-color: #d14421;
+  border-width: 2px; /* 2px ring with blue-500 color */
+}
