@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:5000/product"
+axios.defaults.baseURL = "https://backend-sn-ysq8.onrender.com/product"
 
 
 export async function getAllProducts() {

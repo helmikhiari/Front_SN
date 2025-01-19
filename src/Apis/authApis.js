@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const auth = axios.create({ baseURL: "http://localhost:5000/auth" })
+const auth = axios.create({ baseURL: "https://backend-sn-ysq8.onrender.com/auth" })
 export async function login(credentials) {
     try {
 
@@ -37,7 +37,7 @@ export async function resetPasswordAPI(token, newPassword) {
         if (!token) {
             return false;
         }
-        const rep =await auth.post("/resetPassword", { newPassword }, { headers: { 'Authorization': `Bearer ${token}` } })
+        const rep = await auth.post("/resetPassword", { newPassword }, { headers: { 'Authorization': `Bearer ${token}` } })
         return 1;
     } catch (error) {
         if (error.response.status === 409) {
