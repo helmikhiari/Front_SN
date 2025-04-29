@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const user = axios.create({ baseURL: "https://backend-sn-ysq8.onrender.com/user" })
-
+// const user = axios.create({ baseURL: "https://backend-sn-ysq8.onrender.com/user" })
+const user = axios.create({ baseURL: "http://localhost:5000/user" })
 export async function getUser() {
     try {
         const token = localStorage.getItem("token")

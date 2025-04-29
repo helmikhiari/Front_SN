@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const auth = axios.create({ baseURL: "https://backend-sn-ysq8.onrender.com/auth" })
+// const auth = axios.create({ baseURL: "https://backend-sn-ysq8.onrender.com/auth" })
+const auth = axios.create({ baseURL: "http://localhost:5000/auth" })
+
 export async function login(credentials) {
     try {
 
